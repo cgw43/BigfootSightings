@@ -1,0 +1,25 @@
+h1 {
+    text-align: center; 
+    margin-bottom: 3%;
+    margin-top: 1%;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.center {
+    text-align: center;
+}
+
+.scrollbar {
+   /* height: 40%;
+    overflow-wrap: break-word; */
+    width: 25%;
+    height: 50%;
+    overflow: scroll !important;
+}
+
+ul {
+    list-style-type: none;
+}
