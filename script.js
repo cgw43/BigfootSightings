@@ -246,11 +246,53 @@ $.getJSON("bigfoot_geo.json", function(bigfoot) {
       console.log($('#choro').val());
       let newID = $('#choro').val();
       if (newID == 0) {
-        chart.data.labels = states.map((d) => d.properties.name);
-        chart.data.datasets[0].outline = nation;
-        chart.data.datasets[0].data = temp;
-        chart.options.color.quantize = 200;
-        chart.update();
+        chart.destroy();
+        chart = new Chart(document.getElementById("canvas").getContext("2d"), {
+          type: 'choropleth',
+          data: {
+            labels: states.map((d) => d.properties.name),
+            datasets: [{
+              label: 'States',
+              outline: nation,
+              data: temp,
+              }]
+            },
+          options: {
+            elements: {
+              geoFeature: {
+                outlineBorderColor: 'rgb(115, 112, 111)',
+              },
+            },
+            plugins: {
+              tooltip: {
+                callbacks: {
+                  label: (context) => {
+                    return ` ${context.raw.value} sightings`;
+                  },
+                },
+              },
+              legend: {
+                display: false
+              },
+            },
+            scales: {
+              projection: {
+                axis: 'x',
+                projection: 'albersUsa',  
+              },
+              color: {
+                axis: 'x',
+                quantize: 200,
+                interpolate: 'greens', 
+                legend: {
+                  position: 'bottom-right',
+                  align: 'bottom',
+                  indicatorWidth: 15,
+                },
+              }
+            },
+          }
+        });
       }
       else { 
         let index = states.findIndex((state) => state.id == newID);
@@ -266,12 +308,53 @@ $.getJSON("bigfoot_geo.json", function(bigfoot) {
           if (cty >= 0) {
         countyData[cty].value = countyData[cty].value + 1; } else {console.log("-1: " + entry.county)}
           });
-
-        chart.data.labels = state.map((d) => d.properties.name);
-        chart.data.datasets[0].outline = states[index];
-        chart.data.datasets[0].data = countyData;
-        chart.options.color.quantize = 5;
-        chart.update();
+        chart.destroy();
+        chart = new Chart(document.getElementById("canvas").getContext("2d"), {
+          type: 'choropleth',
+          data: {
+            labels: state.map((d) => d.properties.name),
+            datasets: [{
+              label: 'Counties',
+              outline: states[index],
+              data: countyData,
+              }]
+            },
+          options: {
+            elements: {
+              geoFeature: {
+                outlineBorderColor: 'rgb(115, 112, 111)',
+              },
+            },
+            plugins: {
+              tooltip: {
+                callbacks: {
+                  label: (context) => {
+                    return ` ${context.raw.value} sightings`;
+                  },
+                },
+              },
+              legend: {
+                display: false
+              },
+            },
+            scales: {
+              projection: {
+                axis: 'x',
+                projection: 'albersUsa',  
+              },
+              color: {
+                axis: 'x',
+                quantize: 5,
+                interpolate: 'greens', 
+                legend: {
+                  position: 'bottom-right',
+                  align: 'bottom',
+                  indicatorWidth: 15,
+                },
+              }
+            },
+          }
+        });
       }
     });
 
@@ -284,7 +367,7 @@ $.getJSON("bigfoot_geo.json", function(bigfoot) {
           datasets: [{
             label: 'States',
             outline: nation,
-            data: temp,//states.map((d) => ({feature: d, value: Math.random() * 10})),
+            data: temp,
             }]
           },
         options: {
